@@ -1,21 +1,36 @@
 import React from 'react';
-import { Form, Input, Button} from 'antd';
+import { Form, Input, Button, message } from 'antd';
+import $ from 'jquery';
+import { API_ROOT } from './constant';
+
 const FormItem = Form.Item;
 
-
-
-
-
 class RegistrationForm extends React.Component {
+
 	state = {
 		confirmDirty: false,
+		autoCompleteResult: [],
+	}
 
-	};
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
 			if (!err) {
 				console.log('Received values of form: ', values);
+				$.ajax({
+					url: `${API_ROOT}/signup`,
+					method: 'POST',
+					data: JSON.stringify({
+						username: values.username,
+						password: values.password,
+					})
+				}).then((response) => {
+					message.success(response);
+				}, (response) => {
+					message.error(response.responseText);
+				}).catch((error) => {
+					console.log(error);
+				});
 			}
 		});
 	}
@@ -38,10 +53,8 @@ class RegistrationForm extends React.Component {
 		}
 		callback();
 	}
-
 	render() {
 		const { getFieldDecorator } = this.props.form;
-
 
 		const formItemLayout = {
 			labelCol: {
@@ -66,14 +79,13 @@ class RegistrationForm extends React.Component {
 			},
 		};
 
-
 		return (
-			<Form onSubmit={this.handleSubmit} className= "register-form">
+			<Form onSubmit={this.handleSubmit} className="register-form">
 				<FormItem
 					{...formItemLayout}
 					label="Username"
 				>
-					{getFieldDecorator('nickname', {
+					{getFieldDecorator('username', {
 						rules: [{ required: true, message: 'Please input your username!', whitespace: true }],
 					})(
 						<Input />
@@ -107,16 +119,12 @@ class RegistrationForm extends React.Component {
 						<Input type="password" onBlur={this.handleConfirmBlur} />
 					)}
 				</FormItem>
-
-
-
-
-
-
+				<FormItem {...tailFormItemLayout}>
+					<Button type="primary" htmlType="submit">Register</Button>
+				</FormItem>
 			</Form>
 		);
 	}
 }
 
 export const Register = Form.create()(RegistrationForm);
-
