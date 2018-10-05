@@ -1,8 +1,9 @@
-@import '~antd/dist/antd.css';
-@import 'Main.css';
+@import '../../node_modules/antd/dist/antd.css';
 @import 'Register.css';
 @import 'Login.css';
 @import 'Header.css';
+@import 'Home.css';
+@import 'AroundMarker.css';
 
 .App {
   text-align: center;
@@ -15,16 +16,18 @@
 }
 
 .App-header {
-  background-color: #222;
+  background-color: darkblue;
   height: 60px;
   color: white;
 }
 
 .App-title {
   font-size: 1.5em;
-  color: #61dafb;
-  padding-top: 16px;
+  margin: 0px;
   float: left;
+  padding-top: 16px;
+  color: white;
+  font-family: Arial, "Hiragino Sans GB", "Microsoft Yahei", "Microsoft Sans Serif", sans-serif;
 }
 
 .App-intro {
@@ -35,3 +38,4 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+

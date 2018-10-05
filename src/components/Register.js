@@ -11,7 +11,6 @@ class RegistrationForm extends React.Component {
 		confirmDirty: false,
 		autoCompleteResult: [],
 	};
-
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
@@ -27,20 +26,19 @@ class RegistrationForm extends React.Component {
 				}).then((response) => {
 					message.success(response);
 					this.props.history.push('/login');
-				}, (response) => {
-					message.error(response.responseText);
-				}).catch((error) => {
-					message.error(error);
+				}, (error) => {
+					message.error(error.responseText);
+				}).catch((e) => {
+					console.log(e);
 				});
 			}
 		});
 	}
-
 	handleConfirmBlur = (e) => {
 		const value = e.target.value;
 		this.setState({ confirmDirty: this.state.confirmDirty || !!value });
 	}
-	checkPassword = (rule, value, callback) => {
+	compareToFirstPassword = (rule, value, callback) => {
 		const form = this.props.form;
 		if (value && value !== form.getFieldValue('password')) {
 			callback('Two passwords that you enter is inconsistent!');
@@ -48,14 +46,13 @@ class RegistrationForm extends React.Component {
 			callback();
 		}
 	}
-	checkConfirm = (rule, value, callback) => {
+	validateToNextPassword = (rule, value, callback) => {
 		const form = this.props.form;
 		if (value && this.state.confirmDirty) {
 			form.validateFields(['confirm'], { force: true });
 		}
 		callback();
 	}
-
 	render() {
 		const { getFieldDecorator } = this.props.form;
 
@@ -102,7 +99,7 @@ class RegistrationForm extends React.Component {
 						rules: [{
 							required: true, message: 'Please input your password!',
 						}, {
-							validator: this.checkConfirm,
+							validator: this.validateToNextPassword,
 						}],
 					})(
 						<Input type="password" />
@@ -116,7 +113,7 @@ class RegistrationForm extends React.Component {
 						rules: [{
 							required: true, message: 'Please confirm your password!',
 						}, {
-							validator: this.checkPassword,
+							validator: this.compareToFirstPassword,
 						}],
 					})(
 						<Input type="password" onBlur={this.handleConfirmBlur} />
